@@ -28,7 +28,7 @@ def wrong_events_search(csv_reader, csv_writer):
         # Check first element event
         if previous_element_event is None:
             if event != "activate":
-                csv_writer.writerow((timestamp, reader.line_num, 'Wrong order of events. First action is not "activate"'))
+                csv_writer.writerow((timestamp, csv_reader.line_num, 'Wrong order of events. First action is not "activate"'))
             previous_event[element] = event
             continue
 
@@ -40,11 +40,11 @@ def wrong_events_search(csv_reader, csv_writer):
 
         # Check a single process is active
         if num_active_process > 1:
-            csv_writer.writerow((timestamp, reader.line_num, 'Parallel active tasks'))
+            csv_writer.writerow((timestamp, csv_reader.line_num, 'Parallel active tasks'))
 
         # Check correct order of events for current element
         if event not in event_order_dict[previous_element_event]:
-            csv_writer.writerow((timestamp, reader.line_num, 'Wrong order of events'))
+            csv_writer.writerow((timestamp, csv_reader.line_num, 'Wrong order of events'))
 
         previous_event[element] = event
 
@@ -52,7 +52,7 @@ def wrong_events_search(csv_reader, csv_writer):
 if __name__ == '__main__':
     input_btf_file_path = "luxoft_btf_task/Demo_Exercise_Trace.btf"
     result_file_path = "result_file_funcs.csv"
-    with open(input_btf_file_path) as src, open(result_file_path, "w") as dst:
+    with open(input_btf_file_path) as src, open(result_file_path, "w", newline='') as dst:
         reader = csv.reader(src, delimiter=',')
         writer = csv.writer(dst, delimiter=',')
         writer.writerow(('# TimeStamp', 'Line number in BTF trace', 'Comment'))
