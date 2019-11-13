@@ -68,13 +68,6 @@ class WrongEventsTesting(TestCase):
         wrong_events_search(fake_reader, self.fake_writer)
         self.assertEqual(self.fake_writer.result, [('45', 4, 'Wrong order of events')])
 
-    def test_first_start(self):
-        fake_reader = FakeReader([
-            ("43", "Core1", "0", "T", "T2", "391", "start")
-        ])
-        wrong_events_search(fake_reader, self.fake_writer)
-        self.assertEqual(self.fake_writer.result, [('43', 1, 'Wrong order of events. First action is not "activate"')])
-
     def test_first_preempt(self):
         fake_reader = FakeReader([
             ("43", "Core1", "0", "T", "T2", "391", "preempt")
@@ -104,6 +97,34 @@ class WrongEventsTesting(TestCase):
         wrong_events_search(fake_reader, self.fake_writer)
         self.assertEqual(self.fake_writer.result, [('44', 5, 'Wrong order of events')])
 
+    def test_process_termination(self):
+        fake_reader = FakeReader([
+            ("42", "Core1", "0", "T", "T2", "391", "activate"),
+            ("43", "Core1", "0", "T", "T2", "391", "start"),
+            ("44", "Core1", "0", "T", "T2", "391", "terminate"),
+            ("45", "Core1", "0", "T", "T2", "381", "activate"),
+            ("46", "Core1", "0", "T", "T2", "381", "start")
+        ])
+        wrong_events_search(fake_reader, self.fake_writer)
+        self.assertFalse(self.fake_writer.result)
+
+    def test_process_preempt(self):
+        fake_reader = FakeReader([
+            ("42", "Core1", "0", "T", "T2", "391", "activate"),
+            ("43", "Core1", "0", "T", "T2", "391", "start"),
+            ("44", "Core1", "0", "T", "T2", "391", "preempt"),
+            ("45", "Core1", "0", "T", "T1", "381", "activate"),
+            ("46", "Core1", "0", "T", "T1", "381", "start")
+        ])
+        wrong_events_search(fake_reader, self.fake_writer)
+        self.assertFalse(self.fake_writer.result)
+
+    def test_incorrect_event(self):
+        fake_reader = FakeReader([
+            ("48", "Core1", "0", "T", "T2", "391", "active")
+        ])
+        wrong_events_search(fake_reader, self.fake_writer)
+        self.assertEqual(self.fake_writer.result, [('48', 1, 'Unknown event: "active"')])
 
 if __name__ == '__main__':
     main()

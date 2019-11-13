@@ -20,7 +20,7 @@ def wrong_events_search(csv_reader, csv_writer):
 
         # Check if event is acceptable
         if event not in event_order_dict:
-            csv_writer.writerow((timestamp, reader.line_num, 'Unknown event: "%s"' % event))
+            csv_writer.writerow((timestamp, csv_reader.line_num, 'Unknown event: "%s"' % event))
             continue
 
         previous_element_event = previous_event.get(element)
