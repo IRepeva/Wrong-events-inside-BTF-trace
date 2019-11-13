@@ -51,7 +51,7 @@ def wrong_events_search(csv_reader, csv_writer):
 
 if __name__ == '__main__':
     input_btf_file_path = "luxoft_btf_task/Demo_Exercise_Trace.btf"
-    result_file_path = "result_file_funcs.csv"
+    result_file_path = "result_file.csv"
     with open(input_btf_file_path) as src, open(result_file_path, "w", newline='') as dst:
         reader = csv.reader(src, delimiter=',')
         writer = csv.writer(dst, delimiter=',')

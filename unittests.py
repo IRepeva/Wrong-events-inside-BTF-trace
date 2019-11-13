@@ -49,16 +49,7 @@ class WrongEventsTesting(TestCase):
         wrong_events_search(fake_reader, self.fake_writer)
         self.assertEqual(self.fake_writer.result, [('47', 6, 'Parallel active tasks')])
 
-    def test_wrong_order1(self):
-        fake_reader = FakeReader([
-            ("42", "Core1", "0", "T", "T2", "391", "activate"),
-            ("43", "Core1", "0", "T", "T2", "391", "start"),
-            ("44", "Core1", "0", "T", "T2", "392", "activate")
-        ])
-        wrong_events_search(fake_reader, self.fake_writer)
-        self.assertEqual(self.fake_writer.result, [('44', 3, 'Wrong order of events')])
-
-    def test_wrong_order2(self):
+    def test_wrong_order(self):
         fake_reader = FakeReader([
             ("42", "Core1", "0", "T", "T2", "391", "activate"),
             ("43", "Core1", "0", "T", "T2", "391", "start"),
@@ -68,7 +59,7 @@ class WrongEventsTesting(TestCase):
         wrong_events_search(fake_reader, self.fake_writer)
         self.assertEqual(self.fake_writer.result, [('45', 4, 'Wrong order of events')])
 
-    def test_first_preempt(self):
+    def test_first_not_activate(self):
         fake_reader = FakeReader([
             ("43", "Core1", "0", "T", "T2", "391", "preempt")
         ])
@@ -125,6 +116,7 @@ class WrongEventsTesting(TestCase):
         ])
         wrong_events_search(fake_reader, self.fake_writer)
         self.assertEqual(self.fake_writer.result, [('48', 1, 'Unknown event: "active"')])
+
 
 if __name__ == '__main__':
     main()
